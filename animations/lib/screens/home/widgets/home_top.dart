@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'category_view.dart';
+
 class HomeTop extends StatelessWidget {
 
   final Animation<double> containerGrow;
@@ -8,16 +10,17 @@ class HomeTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Container(
-      height: screenSize.height * 0.3,
+      height: screenSize.height * 0.4,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(
-            'assets/background.jpg',
-          ),
+            image: AssetImage(
+              'assets/background.jpg',
+            ),
             fit: BoxFit.cover
         ),
       ),
@@ -38,18 +41,19 @@ class HomeTop extends StatelessWidget {
               width: containerGrow.value * 120,
               height: containerGrow.value * 120,
               decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/profile.jpg'
-                  ),
-                  fit: BoxFit.cover,
-                )
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage(
+                        'assets/profile.jpg'
+                    ),
+                    fit: BoxFit.cover,
+                  )
               ),
               child: Container(
                 width: containerGrow.value * 35,
                 height: containerGrow.value * 35,
                 margin: const EdgeInsets.only(left: 80),
+                alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color.fromRGBO(247, 64, 106, 1.0),
@@ -65,7 +69,8 @@ class HomeTop extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            const CategoryView(),
           ],
         ),
       ),

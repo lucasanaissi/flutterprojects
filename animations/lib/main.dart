@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Animations intro',
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
