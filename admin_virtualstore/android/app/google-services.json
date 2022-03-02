@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "272792613352",
+    "project_id": "virtualstoreinflutter",
+    "storage_bucket": "virtualstoreinflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272792613352:android:36334690cdd9589167345d",
+        "android_client_info": {
+          "package_name": "br.com.jaco.admin_virtualstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272792613352-8qjdge2d19jp2hges1rgckne6muubb4b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp9ju6ImpljXkQJ8OY4_G5rFdmZXbVKa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272792613352-8qjdge2d19jp2hges1rgckne6muubb4b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272792613352:android:1fded49eb0467e2f67345d",
+        "android_client_info": {
+          "package_name": "store.virtual.virtual_store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272792613352-8qjdge2d19jp2hges1rgckne6muubb4b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp9ju6ImpljXkQJ8OY4_G5rFdmZXbVKa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272792613352-8qjdge2d19jp2hges1rgckne6muubb4b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
