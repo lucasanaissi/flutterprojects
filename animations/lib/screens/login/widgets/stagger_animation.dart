@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class StaggerAnimation extends StatelessWidget {
   final AnimationController controller;
 
-  StaggerAnimation({required this.controller, Key? key})
+  StaggerAnimation({Key? key, required this.controller})
       : buttonSqueeze = Tween(
     begin: 320.0,
     end: 60.0,
@@ -23,7 +23,7 @@ class StaggerAnimation extends StatelessWidget {
                 0.5, 1,
                 curve: Curves.bounceOut,)
           ),
-        );
+        ), super(key: key);
 
   final Animation<double> buttonSqueeze;
   final Animation<double> buttonZoomOut;

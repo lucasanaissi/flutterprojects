@@ -8,7 +8,9 @@ class StaggerAnimation extends StatelessWidget {
   final AnimationController controller;
 
   StaggerAnimation({Key? key, required this.controller})
-      : containerGrow = CurvedAnimation(parent: controller, curve: Curves.ease),
+      : containerGrow = CurvedAnimation(
+      parent: controller,
+      curve: Curves.ease),
         listSlidePosition = EdgeInsetsTween(
           begin: const EdgeInsets.only(bottom: 0),
           end: const EdgeInsets.only(bottom: 80),
@@ -21,15 +23,15 @@ class StaggerAnimation extends StatelessWidget {
             ))),
         fadeAnimation = ColorTween(
           begin: const Color.fromRGBO(247, 64, 106, 1.0),
-          end: const Color.fromRGBO(247, 64, 106, 0.0),
+          end: const  Color.fromRGBO(247, 64, 106, 0.0),
         ).animate(CurvedAnimation(
             parent: controller,
-            curve: Curves.easeInExpo),
-        );
+            curve: Curves.decelerate),
+        ), super(key: key);
 
   final Animation<double> containerGrow;
   final Animation<EdgeInsets> listSlidePosition;
-  final Animation<Color> fadeAnimation;
+  final Animation<Color?> fadeAnimation;
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
     return Stack(
@@ -37,12 +39,18 @@ class StaggerAnimation extends StatelessWidget {
         ListView(
           padding: EdgeInsets.zero,
           children: [
-            HomeTop(containerGrow: containerGrow),
-            AnimatedListView(listSlidePosition: listSlidePosition),
+            HomeTop(
+                containerGrow: containerGrow
+            ),
+            AnimatedListView(
+                listSlidePosition: listSlidePosition
+            ),
           ],
         ),
-        FadeContainer(
-          fadeAnimation: fadeAnimation,
+        IgnorePointer(
+          child: FadeContainer(
+            fadeAnimation: fadeAnimation as Animation<Color>,
+          ),
         )
       ],
     );
@@ -51,11 +59,9 @@ class StaggerAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: AnimatedBuilder(
-          animation: controller,
-          builder: _buildAnimation,
-        ),
+      body: AnimatedBuilder(
+        animation: controller,
+        builder: _buildAnimation,
       ),
     );
   }
