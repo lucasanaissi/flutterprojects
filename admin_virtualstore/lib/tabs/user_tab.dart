@@ -1,7 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 
-import '../blocs/user_bloc.dart';
+import '../blocs/users_bloc.dart';
 import '../widgets/user_tile.dart';
 
 class UsersTab extends StatelessWidget {

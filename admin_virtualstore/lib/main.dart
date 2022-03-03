@@ -1,5 +1,5 @@
-import 'package:admin_virtualstore/blocs/user_bloc.dart';
-import 'package:admin_virtualstore/screens/login/login_screen.dart';
+import 'package:admin_virtualstore/blocs/users_bloc.dart';
+import 'package:admin_virtualstore/screens/login_screen.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

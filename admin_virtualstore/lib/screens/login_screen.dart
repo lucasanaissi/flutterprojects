@@ -1,8 +1,8 @@
 import 'package:admin_virtualstore/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/input_field.dart';
-import '../home/home_screen.dart';
+import '../widgets/input_field.dart';
+import 'home_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
