@@ -1,5 +1,6 @@
 import 'package:admin_virtualstore/blocs/products_bloc.dart';
 import 'package:admin_virtualstore/validators/product_validators.dart';
+import 'package:admin_virtualstore/widgets/products_sizes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -155,6 +156,17 @@ class _ProductScreenState extends State<ProductScreen> with ProductValidator {
                       decoration: _buildDecoration('Preço'),
                       onSaved: _productBloc.savePrice,
                       validator: validatePrice,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Tamanhos',
+                      style: _fieldStyle,
+                    ),
+                    ProductsSizes(
+                      context: context,
+                      initialValue: snapshot.data!['sizes'],
+                      onSaved: (s){},
+                      validator: (s){},
                     ),
                   ],
                 );
