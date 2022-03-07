@@ -1,3 +1,4 @@
+import 'package:admin_virtualstore/widgets/edit_category_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,21 @@ class CategoryTile extends StatelessWidget {
       child: Card(
         child: ExpansionTile(
           initiallyExpanded: false,
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(
-              category.get('icon'),
+          leading: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => EditCategoryDialog(
+                  category: category,
+                ),
+              );
+            },
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                category.get('icon'),
+              ),
+              backgroundColor: Colors.transparent,
             ),
-            backgroundColor: Colors.transparent,
           ),
           title: Text(
             category.get('title'),
@@ -42,19 +53,23 @@ class CategoryTile extends StatelessWidget {
                           title: Text(
                             doc.get('title'),
                           ),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(doc.get('images')[0]),
-                            backgroundColor: Colors.transparent,
+                          leading: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(doc.get('images')[0]),
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
                           trailing:
                               Text('R\$${doc.get('price').toStringAsFixed(2)}'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => ProductScreen(
-                                    product: doc,
-                                    categoryId: category.id,
-                                  )),
+                                builder: (context) => ProductScreen(
+                                  product: doc,
+                                  categoryId: category.id,
+                                ),
+                              ),
                             );
                           },
                         );
@@ -72,9 +87,10 @@ class CategoryTile extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) => ProductScreen(
-                                      categoryId: category.id,
-                                    )),
+                                  builder: (context) => ProductScreen(
+                                    categoryId: category.id,
+                                  ),
+                                ),
                               );
                             },
                           ),

@@ -4,11 +4,12 @@ import 'add_size_dialog.dart';
 
 class ProductsSizes extends FormField<List> {
   ProductsSizes({
+    Key? key,
     BuildContext? context,
     List? initialValue,
     FormFieldSetter<List>? onSaved,
     FormFieldValidator<List>? validator,
-  }) : super(
+  }) : super(key: key,
             initialValue: initialValue,
             onSaved: onSaved,
             validator: validator,
@@ -54,7 +55,7 @@ class ProductsSizes extends FormField<List> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
                             border: Border.all(
-                              color: Colors.pinkAccent,
+                              color: state.hasError ? Colors.red : Colors.pinkAccent,
                               width: 3,
                             ),
                           ),
@@ -66,11 +67,12 @@ class ProductsSizes extends FormField<List> {
                             ),
                           ),
                         ),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          String? size = await showDialog(
                               context: context!,
-                              builder: (context) => const AddSizeDialog(),
+                              builder: (context) => AddSizeDialog(),
                           );
+                          if (size != null) state.didChange(state.value!..add(size));
                         },
                       ),
                     ),

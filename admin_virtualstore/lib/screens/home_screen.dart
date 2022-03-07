@@ -7,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../blocs/orders_bloc.dart';
 import '../tabs/orders_tab.dart';
+import '../widgets/edit_category_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,78 +36,78 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[850],
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-              iconTheme: const IconThemeData(
-                color: Colors.white,
-              ),
-              canvasColor: Colors.pinkAccent,
-              primaryColor: Colors.white,
-              textTheme: Theme
-                  .of(context)
-                  .textTheme
-                  .copyWith(
-                  caption: const TextStyle(
-                    color: Colors.white,
-                  )
-              )
-          ),
-          child: BottomNavigationBar(
-            selectedItemColor: Colors.white,
-            currentIndex: _page,
-            onTap: (p) {
-              _pageController.animateToPage(
-                p,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.ease,
-              );
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(
-                    Icons.person
-                ),
-                label: 'Clientes',
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                      Icons.shopping_cart
-                  ),
-                  label: 'Pedidos'
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                      Icons.list
-                  ),
-                  label: 'Produtos'
-              ),
-            ],
-          ),
-        ),
-        body: SafeArea(
-          child: BlocProvider(
-            dependencies: const [],
-            blocs: [
-              Bloc((i) => _userBloc),
-              Bloc((i) => _ordersBloc),
-            ],
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (p) {
-                setState(() {
-                  _page = p;
-                });
-              },
-              children: const [
-                UsersTab(),
-                OrdersTab(),
-                ProductsTab(),
-              ],
+      backgroundColor: Colors.grey[850],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+            iconTheme: const IconThemeData(
+              color: Colors.white,
             ),
+            canvasColor: Colors.pinkAccent,
+            primaryColor: Colors.white,
+            textTheme: Theme
+                .of(context)
+                .textTheme
+                .copyWith(
+                caption: const TextStyle(
+                  color: Colors.white,
+                )
+            )
+        ),
+        child: BottomNavigationBar(
+          selectedItemColor: Colors.white,
+          currentIndex: _page,
+          onTap: (p) {
+            _pageController.animateToPage(
+              p,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.ease,
+            );
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                  Icons.person
+              ),
+              label: 'Clientes',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                    Icons.shopping_cart
+                ),
+                label: 'Pedidos'
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                    Icons.list
+                ),
+                label: 'Produtos'
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: BlocProvider(
+          dependencies: const [],
+          blocs: [
+            Bloc((i) => _userBloc),
+            Bloc((i) => _ordersBloc),
+          ],
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (p) {
+              setState(() {
+                _page = p;
+              });
+            },
+            children: const [
+              UsersTab(),
+              OrdersTab(),
+              ProductsTab(),
+            ],
           ),
         ),
-        floatingActionButton: _buildFloating(),
+      ),
+      floatingActionButton: _buildFloating(),
     );
   }
 
@@ -132,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
               labelStyle: const TextStyle(
                 fontSize: 14,
               ),
-              onTap: (){
+              onTap: () {
                 _ordersBloc.setOrderCriteria(SortCriteria.READY_LAST);
               },
             ),
@@ -145,11 +146,24 @@ class _HomeScreenState extends State<HomeScreen> {
               labelStyle: const TextStyle(
                 fontSize: 14,
               ),
-              onTap: (){
+              onTap: () {
                 _ordersBloc.setOrderCriteria(SortCriteria.READY_FIRST);
               },
             )
           ],
+        );
+      case 2:
+        return FloatingActionButton(
+          child: const Icon(
+            Icons.add
+          ),
+          backgroundColor: Colors.pinkAccent,
+          onPressed: (){
+            showDialog(
+              context: context,
+              builder: (context) => EditCategoryDialog(),
+            );
+          },
         );
     }
     return null;
