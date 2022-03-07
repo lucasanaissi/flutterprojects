@@ -44,7 +44,7 @@ class LoginBloc extends BlocBase with LoginValidators {
       } else {
         _stateController.add(LoginState.IDLE);
       }
-    });
+     });
   }
 
   void submit() {
