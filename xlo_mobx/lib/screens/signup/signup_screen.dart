@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:text_divider/text_divider.dart';
 import 'package:xlo_mobx/screens/login/login_screen.dart';
 import 'package:xlo_mobx/stores/signup_store.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final SignupStore signUpStore = SignupStore();
+
+  bool visibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -185,13 +193,19 @@ class SignUpScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                        ),
-                        keyboardType: TextInputType.phone,
-                      ),
+                      Observer(builder: (_) {
+                        return TextField(
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            isDense: true,
+                            hintText: '(99) 99999-9999',
+                            errorText: signUpStore.phoneError,
+                          ),
+                          keyboardType: TextInputType.phone,
+                          autocorrect: false,
+                          onChanged: signUpStore.setPhone,
+                        );
+                      }),
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -221,18 +235,21 @@ class SignUpScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Observer(builder: (_) {
-                        return TextField(
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            isDense: true,
-                            errorText: signUpStore.emailError,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          autocorrect: false,
-                          onChanged: signUpStore.setEmail,
-                        );
-                      }),
+                      Observer(
+                        builder: (_) {
+                          return TextField(
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              isDense: true,
+                              hintText: 'nome@email.com',
+                              errorText: signUpStore.emailError,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            autocorrect: false,
+                            onChanged: signUpStore.setEmail,
+                          );
+                        },
+                      ),
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(left: 3, bottom: 4),
@@ -249,7 +266,7 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '  Use letras, número e caracteres especiais.',
+                              '  Use letras (uma delas maiuscula), números e um @.',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: Colors.grey[500],
@@ -260,18 +277,70 @@ class SignUpScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          isDense: true,
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.visibility,
+                      Observer(
+                        builder: (_) {
+                          return TextField(
+                            obscureText: visibility,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              isDense: true,
+                              errorText: signUpStore.passwordError,
+                              suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    visibility = !visibility;
+                                  });
+                                },
+                                child: Icon(
+                                  visibility
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              ),
                             ),
-                          ),
+                            onChanged: signUpStore.setPassword,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 3, bottom: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              'Confirmar Senha',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              '  Repita a senha.',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      Observer(
+                        builder: (_) {
+                          return TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              isDense: true,
+                              errorText: signUpStore.password2Error,
+                            ),
+                            onChanged: signUpStore.setPassword2,
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       SizedBox(

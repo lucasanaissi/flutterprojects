@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:text_divider/text_divider.dart';
 import 'package:xlo_mobx/screens/signup/signup_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  bool visibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -164,14 +172,19 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       TextField(
-                        obscureText: true,
+                        obscureText: visibility,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           isDense: true,
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.visibility,
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              setState((){
+                                visibility = !visibility;
+                              });
+                            },
+                            child: Icon(
+                              visibility ?
+                              Icons.visibility : Icons.visibility_off,
                             ),
                           ),
                         ),
