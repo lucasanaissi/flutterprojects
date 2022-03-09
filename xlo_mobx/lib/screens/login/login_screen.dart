@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:text_divider/text_divider.dart';
+import 'package:xlo_mobx/components/error_box.dart';
 import 'package:xlo_mobx/screens/signup/signup_screen.dart';
+
+import '../../stores/login_store.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -9,8 +13,9 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+final LoginStore loginStore = LoginStore();
 
+class _LoginScreenState extends State<LoginScreen> {
   bool visibility = true;
 
   @override
@@ -100,15 +105,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 const TextDivider(
-                    text: Text(
-                      'ou',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
+                  text: Text(
+                    'ou',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
                     ),
-                    color: Colors.grey,
-                    thickness: 1),
-                const SizedBox(height: 20),
+                  ),
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
+                Observer(
+                  builder: (_) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ErrorBox(
+                        message: loginStore.error,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,
@@ -134,12 +150,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
+                      Observer(
+                        builder: (_) {
+                          return TextField(
+                            enabled: !loginStore.loading,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                              errorText: loginStore.emailError,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: loginStore.setEmail,
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       Padding(
@@ -171,43 +194,68 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      TextField(
-                        obscureText: visibility,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          isDense: true,
-                          suffixIcon: InkWell(
-                            onTap: () {
-                              setState((){
-                                visibility = !visibility;
-                              });
-                            },
-                            child: Icon(
-                              visibility ?
-                              Icons.visibility : Icons.visibility_off,
+                      Observer(
+                        builder: (_) {
+                          return TextField(
+                            enabled: !loginStore.loading,
+                            obscureText: visibility,
+                            onChanged: loginStore.setPassword,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              isDense: true,
+                              errorText: loginStore.passwordError,
+                              suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    visibility = !visibility;
+                                  });
+                                },
+                                child: Icon(
+                                  visibility
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
-                      SizedBox(
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(40),
-                            primary: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
+                      Observer(
+                        builder: (_) {
+                          return SizedBox(
+                            child: ElevatedButton(
+                              onPressed: loginStore.loading
+                                  ? null
+                                  : loginStore.loginPressed,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(40),
+                                primary: Colors.orange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              child: loginStore.loading
+                                  ? const SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                        strokeWidth: 1.0,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Entrar',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                             ),
-                          ),
-                          child: const Text(
-                            'Entrar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       const Divider(
