@@ -43,6 +43,20 @@ mixin _$SignupStore on _SignupStore, Store {
       (_$password2ValidComputed ??= Computed<bool>(() => super.password2Valid,
               name: '_SignupStore.password2Valid'))
           .value;
+  Computed<bool>? _$isFormValidComputed;
+
+  @override
+  bool get isFormValid =>
+      (_$isFormValidComputed ??= Computed<bool>(() => super.isFormValid,
+              name: '_SignupStore.isFormValid'))
+          .value;
+  Computed<dynamic>? _$signUpPressedComputed;
+
+  @override
+  dynamic get signUpPressed =>
+      (_$signUpPressedComputed ??= Computed<dynamic>(() => super.signUpPressed,
+              name: '_SignupStore.signUpPressed'))
+          .value;
 
   final _$nameAtom = Atom(name: '_SignupStore.name');
 
@@ -119,6 +133,43 @@ mixin _$SignupStore on _SignupStore, Store {
     });
   }
 
+  final _$loadingAtom = Atom(name: '_SignupStore.loading');
+
+  @override
+  bool? get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool? value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  final _$errorAtom = Atom(name: '_SignupStore.error');
+
+  @override
+  String? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  final _$_signUpAsyncAction = AsyncAction('_SignupStore._signUp');
+
+  @override
+  Future<void> _signUp() {
+    return _$_signUpAsyncAction.run(() => super._signUp());
+  }
+
   final _$_SignupStoreActionController = ActionController(name: '_SignupStore');
 
   @override
@@ -184,11 +235,15 @@ email: ${email},
 phone: ${phone},
 password: ${password},
 password2: ${password2},
+loading: ${loading},
+error: ${error},
 nameValid: ${nameValid},
 emailValid: ${emailValid},
 phoneValid: ${phoneValid},
 passwordValid: ${passwordValid},
-password2Valid: ${password2Valid}
+password2Valid: ${password2Valid},
+isFormValid: ${isFormValid},
+signUpPressed: ${signUpPressed}
     ''';
   }
 }

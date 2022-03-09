@@ -1,6 +1,9 @@
 import 'package:flutter/rendering.dart';
 import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
+import 'package:xlo_mobx/repositories/user_repository.dart';
+
+import '../models/user.dart';
 
 part 'signup_store.g.dart';
 
@@ -52,7 +55,7 @@ abstract class _SignupStore with Store {
   void setPhone(String value) => phone = value;
 
   @computed
-  bool get phoneValid => phone != null && phone!.length >= 14;
+  bool get phoneValid => phone != null && phone!.length >= 11;
 
   String? get phoneError {
     if (phone == null || phoneValid) {
@@ -96,6 +99,42 @@ abstract class _SignupStore with Store {
     } else {
       return 'Senhas não coincidem.';
     }
+  }
+
+  @computed
+  bool get isFormValid => nameValid && emailValid
+      && phoneValid && password2Valid && passwordValid;
+
+
+  @computed
+  dynamic get signUpPressed => (isFormValid && !loading!) ? _signUp : null;
+
+  @observable
+  bool? loading = false;
+
+  @observable
+  String? error;
+
+
+  @action
+  Future<void> _signUp () async {
+    loading = true;
+
+    final user = User(
+      name: name,
+      email: email,
+      phone: phone,
+      password: password,
+    );
+
+    try {
+      final resultUser = await UserRepository().signUp(user);
+      print(resultUser);
+    } catch (e) {
+      error = e.toString();
+    }
+
+    loading = false;
   }
 
 }

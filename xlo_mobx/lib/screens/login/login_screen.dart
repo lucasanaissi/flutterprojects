@@ -222,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: () {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignUpScreen()));
+                                  builder: (context) => const SignUpScreen()));
                             },
                             child: const Text(
                               'Cadastre-se!',

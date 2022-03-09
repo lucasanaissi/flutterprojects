@@ -5,8 +5,10 @@ import 'package:text_divider/text_divider.dart';
 import 'package:xlo_mobx/screens/login/login_screen.dart';
 import 'package:xlo_mobx/stores/signup_store.dart';
 
+import '../../components/error_box.dart';
+
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -35,6 +37,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Observer(
+                  builder: (_) {
+                    return ErrorBox(
+                      message: signUpStore.error,
+                    );
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,
@@ -154,6 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Observer(
                         builder: (BuildContext context) {
                           return TextField(
+                            enabled: !signUpStore.loading!,
                             decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
                                 isDense: true,
@@ -195,6 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Observer(builder: (_) {
                         return TextField(
+                          enabled: !signUpStore.loading!,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             isDense: true,
@@ -238,6 +249,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Observer(
                         builder: (_) {
                           return TextField(
+                            enabled: !signUpStore.loading!,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
                               isDense: true,
@@ -280,6 +292,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Observer(
                         builder: (_) {
                           return TextField(
+                            enabled: !signUpStore.loading!,
                             obscureText: visibility,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
@@ -332,6 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Observer(
                         builder: (_) {
                           return TextField(
+                            enabled: !signUpStore.loading!,
                             obscureText: true,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
@@ -343,24 +357,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      SizedBox(
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(40),
-                            primary: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
+                      Observer(
+                        builder: (_) {
+                          return SizedBox(
+                            child: ElevatedButton(
+                              onPressed: signUpStore.signUpPressed,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(40),
+                                primary: Colors.orange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              child: signUpStore.loading!
+                                  ? const SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                        strokeWidth: 1.0,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Cadastre-se',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                             ),
-                          ),
-                          child: const Text(
-                            'Cadastre-se',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                       const Divider(
