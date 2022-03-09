@@ -4,6 +4,7 @@ import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/stores/page_store.dart';
 
 import '../adverts/adverts_screen.dart';
+import '../createAd/createad_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           const AdvertsScreen(),
-          Container(color: Colors.blue),
+          const CreateAdScreen(),
           Container(color: Colors.yellow),
           Container(color: Colors.green),
         ],
