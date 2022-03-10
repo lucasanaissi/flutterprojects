@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:xlo_mobx/screens/categories/categories_screen.dart';
+import 'package:xlo_mobx/stores/category_store.dart';
 import 'package:xlo_mobx/stores/createad_store.dart';
 
+import 'components/category_field.dart';
 import 'components/images_field.dart';
 
 class CreateAdScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class CreateAdScreen extends StatefulWidget {
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
   final CreateadStore createadStore = CreateadStore();
+  final CategoryStore categoryStore = CategoryStore();
 
   @override
   Widget build(BuildContext context) {
@@ -112,45 +116,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 8,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Categoria*',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              cursorColor: Colors.deepPurple,
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: 'Selecione uma categoria',
-                border: const OutlineInputBorder(),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.deepPurple,
-                  ),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          CategoryField(createadStore: createadStore),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(
