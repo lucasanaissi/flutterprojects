@@ -41,6 +41,9 @@ dependencies:
   text_divider: ^1.0.0
   mask_text_input_formatter: ^2.1.0
   dotted_decoration: ^2.0.0
+  card_swiper: ^2.0.1
+  image_picker: ^0.8.4+10
+  image_cropper: ^1.5.0
 
 dev_dependencies:
   flutter_test:

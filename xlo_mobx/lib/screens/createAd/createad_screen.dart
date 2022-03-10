@@ -3,25 +3,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:xlo_mobx/stores/createad_store.dart';
 
-import 'components/image_field.dart';
+import 'components/images_field.dart';
 
 class CreateAdScreen extends StatefulWidget {
-  const CreateAdScreen({Key? key}) : super(key: key);
+  CreateAdScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateAdScreen> createState() => _CreateAdScreenState();
 }
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
+  final CreateadStore createadStore = CreateadStore();
+
   @override
   Widget build(BuildContext context) {
-
     var cepFormatter = MaskTextInputFormatter(
-      mask: '#####-###',
-      filter: { "#": RegExp(r'[0-9]') },
-      type: MaskAutoCompletionType.lazy
-    );
+        mask: '#####-###',
+        filter: {"#": RegExp(r'[0-9]')},
+        type: MaskAutoCompletionType.lazy);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +43,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
       drawer: const CustomDrawer(),
       body: ListView(
         children: [
-          const ImageField(),
+          ImagesField(createadStore: createadStore),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(
@@ -141,11 +142,11 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   ),
                 ),
                 suffixIcon: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      color: Colors.deepPurple,
-                    ),
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.arrow_forward_ios_outlined,
+                    color: Colors.deepPurple,
+                  ),
                 ),
               ),
             ),
@@ -167,7 +168,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
               ),
             ),
           ),
-           const Padding(
+          const Padding(
             padding: EdgeInsets.only(right: 250, left: 20),
             child: TextField(
               cursorColor: Colors.deepPurple,
@@ -222,6 +223,34 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             ),
           ),
           const SizedBox(height: 20),
+          Padding(
+            padding:
+                const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 0,
+                    bottom: 20,
+                ),
+            child: SizedBox(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(40),
+                  primary: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                ),
+                child: const Text(
+                  'Criar anúncio',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
