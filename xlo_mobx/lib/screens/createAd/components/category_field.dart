@@ -49,29 +49,48 @@ class CategoryField extends StatelessWidget {
               );
               if (response != null) {
                 _categoryController?.text = response.description;
+                createadStore.setCategory(response);
               }
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                enabled: false,
-                controller: _categoryController,
-                cursorColor: Colors.deepPurple,
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: 'Selecione uma categoria',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Observer(
+                  builder: (_) {
+                    return TextField(
+                      enabled: false,
+                      controller: _categoryController,
+                      cursorColor: Colors.deepPurple,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: 'Selecione uma categoria',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )),
+          ),
+          if (createadStore.categoryError != null)
+            Container(
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.red)),
+              ),
+              padding: const EdgeInsets.fromLTRB(16, 8, 0, 0),
+              child: Text(
+                createadStore.categoryError!,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
                 ),
               ),
             ),
-          ),
         ],
       );
     });

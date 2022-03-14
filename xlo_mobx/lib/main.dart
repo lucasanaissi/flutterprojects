@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/generated/i18n.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:xlo_mobx/repositories/category_repository.dart';
+import 'package:xlo_mobx/repositories/cep_repository.dart';
 import 'package:xlo_mobx/repositories/ibge_repository.dart';
 import 'package:xlo_mobx/screens/categories/categories_screen.dart';
 import 'package:xlo_mobx/screens/home/home_screen.dart';
@@ -16,10 +17,6 @@ void main() async {
   await initializeParse();
   setupLocators();
   runApp(const MyApp());
-
-  IBGERepository().getUFListFromApi().then((
-      value) => print(value)
-  );
 }
 
 void setupLocators() {
@@ -46,12 +43,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.deepPurple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-        )
-      ),
+          primaryColor: Colors.deepPurple,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+          )),
       home: const HomeScreen(),
     );
   }

@@ -98,7 +98,7 @@ packages:
       name: card_swiper
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   characters:
     dependency: transitive
     description:
@@ -372,7 +372,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.4+10"
+    version: "0.8.4+11"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -668,7 +668,7 @@ packages:
     source: hosted
     version: "2.0.1+1"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
@@ -756,6 +756,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
+  speech_balloon:
+    dependency: "direct main"
+    description:
+      name: speech_balloon
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   stack_trace:
     dependency: transitive
     description:
