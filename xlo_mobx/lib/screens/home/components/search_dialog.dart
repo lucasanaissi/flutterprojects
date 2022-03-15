@@ -2,30 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SearchDialog extends StatefulWidget {
-  SearchDialog({Key? key, required this.currentSearch}) :
+  SearchDialog({Key? key, required this.currentSearch})
+      : controller = TextEditingController(),
         super(key: key);
 
-  final String currentSearch;
+  final String? currentSearch;
+  final TextEditingController controller;
 
   @override
-  State<SearchDialog> createState() => _SearchDialogState();
+  State<SearchDialog> createState() =>
+      _SearchDialogState(currentSearch, controller);
 }
 
 class _SearchDialogState extends State<SearchDialog> {
-
   TextEditingController controller = TextEditingController();
+
+  _SearchDialogState(this.currentSearch, this.controller);
+
+  String? currentSearch;
+
+
 
   @override
   void initState() {
     super.initState();
-
-    controller.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    print('controller ${controller.text}');
+    print('cSearch $currentSearch');
+    if (currentSearch != null) {
+      controller.text = currentSearch!;
+      print('controller ${controller.text}');
+    } else {
+      controller.text = '';
+    }
+
     return Stack(
       children: [
         Positioned(

@@ -9,7 +9,7 @@ import '../../components/error_box.dart';
 import '../../models/category.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  CategoriesScreen({Key? key, this.showAll = true, required this.selected})
+  CategoriesScreen({Key? key, this.showAll = true, this.selected})
       : super(key: key);
 
   final bool showAll;
@@ -22,7 +22,7 @@ class CategoriesScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Escolha uma categoria'),
-          backgroundColor: Colors.purple,
+          backgroundColor: Colors.deepPurple,
         ),
         body: Observer(
           builder: (_) {

@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          const AdvertsScreen(),
+          AdvertsScreen(),
           CreateAdScreen(),
           Container(color: Colors.yellow),
           Container(color: Colors.green),
