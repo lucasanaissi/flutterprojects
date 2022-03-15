@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 
+import '../home/components/search_dialog.dart';
+
 class AdvertsScreen extends StatelessWidget {
   const AdvertsScreen({Key? key}) : super(key: key);
+
+  openSearch(BuildContext context) async {
+    final String search =
+        await showDialog(context: context, builder: (_) => SearchDialog(
+          currentSearch: 'Teste'));
+    print(search);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +21,9 @@ class AdvertsScreen extends StatelessWidget {
           backgroundColor: Colors.deepPurple,
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  openSearch(context);
+                },
                 icon: const Icon(
                   Icons.search,
                 )),
