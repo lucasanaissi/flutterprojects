@@ -48,6 +48,9 @@ dependencies:
   shared_preferences: ^2.0.13
   speech_balloon: ^0.0.4
   path: ^1.8.0
+  intl: ^0.17.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

@@ -17,7 +17,7 @@ class OrderByField extends StatelessWidget {
           filter!.setOrderBy(option);
         },
         child: Container(
-          height: 40,
+          height: 50,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
