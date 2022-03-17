@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/components/custom_drawer/page_tile.dart';
 
+import '../../screens/favorites/favorites_screen.dart';
 import '../../stores/page_store.dart';
 
 class PageSection extends StatelessWidget {
@@ -50,7 +51,9 @@ class PageSection extends StatelessWidget {
           label: 'Favoritos',
           iconData: Icons.favorite_outline,
           onTap: (){
-            pageStore.setPage(4);
+            Navigator.of(context).pop();
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const FavoritesScreen()));
           },
           highlighted: pageStore.page == 4,
         ),

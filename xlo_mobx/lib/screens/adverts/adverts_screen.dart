@@ -5,13 +5,21 @@ import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 import 'package:xlo_mobx/stores/home_store.dart';
 
 import '../home/components/search_dialog.dart';
-import 'ad_tile.dart';
+import 'components/ad_tile.dart';
+import 'components/create_ad_button.dart';
 import 'components/top_bar.dart';
 
-class AdvertsScreen extends StatelessWidget {
+class AdvertsScreen extends StatefulWidget {
   AdvertsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<AdvertsScreen> createState() => _AdvertsScreenState();
+}
+
+class _AdvertsScreenState extends State<AdvertsScreen> {
   final HomeStore homeStore = GetIt.I<HomeStore>();
+
+  final ScrollController scrollController = ScrollController();
 
   openSearch(BuildContext context) async {
     final String? search = await showDialog(
@@ -89,77 +97,91 @@ class AdvertsScreen extends StatelessWidget {
         body: Column(
           children: [
             TopBar(),
-            Expanded(child: Observer(builder: (_) {
-              if (homeStore.error != null) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.error,
-                      color: Colors.deepPurple,
-                      size: 100,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Ocorreu um erro!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    )
-                  ],
-                );
-              }
-              if (homeStore.showProgress) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.deepPurple,
-                    ),
+            Expanded(
+              child: Stack(
+                children: [
+                  Observer(
+                    builder: (_) {
+                      if (homeStore.error != null) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.error,
+                              color: Colors.deepPurple,
+                              size: 100,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Ocorreu um erro!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                      if (homeStore.showProgress) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.deepPurple,
+                            ),
+                          ),
+                        );
+                      }
+                      if (homeStore.adList.isEmpty) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.border_clear,
+                              color: Colors.deepPurple,
+                              size: 100,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Nenhum anúncio encontrado.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                      return ListView.builder(
+                          controller: scrollController,
+                          itemCount: homeStore.itemCount,
+                          itemBuilder: (_, index) {
+                            if (index < homeStore.adList.length) {
+                              return AdTile(ad: homeStore.adList[index]);
+                            }
+                            homeStore.loadNextPage();
+                            return const SizedBox(
+                              height: 10,
+                              child: LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.deepPurple,
+                                ),
+                              ),
+                            );
+                          });
+                    },
                   ),
-                );
-              }
-              if (homeStore.adList.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.border_clear,
-                      color: Colors.deepPurple,
-                      size: 100,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Nenhum anúncio encontrado.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    )
-                  ],
-                );
-              }
-              return ListView.builder(
-                  itemCount: homeStore.itemCount,
-                  itemBuilder: (_, index) {
-                    if (index < homeStore.adList.length) {
-                      return AdTile(ad: homeStore.adList[index]);
-                    }
-                    homeStore.loadNextPage();
-                    return const SizedBox(
-                      height: 10,
-                      child: LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Colors.deepPurple,
-                        ),
-                      ),
-                    );
-                  });
-            })),
+                   Positioned(
+                    bottom: -50,
+                    left: 0,
+                    child: CreateAdButton(scrollController: scrollController),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

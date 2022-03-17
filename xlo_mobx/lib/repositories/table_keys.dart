@@ -24,4 +24,5 @@ const String keyAdImages = 'images';
 const String keyAdCategory = 'category';
 const String keyAdOwner = 'owner';
 const String keyAdCreatedAt = 'createdAt';
+const String keyUpdatedAt = 'updatedAt';
 const String keyAdViews = 'views';

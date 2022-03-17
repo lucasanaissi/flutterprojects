@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:xlo_mobx/screens/account/account_screen.dart';
+import 'package:xlo_mobx/screens/favorites/favorites_screen.dart';
 import 'package:xlo_mobx/stores/page_store.dart';
 
 import '../adverts/adverts_screen.dart';
@@ -38,8 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           AdvertsScreen(),
           CreateAdScreen(),
-          Container(color: Colors.yellow),
           Container(color: Colors.green),
+          Container(color: Colors.green),
+          const FavoritesScreen(),
+          const AccountScreen(),
         ],
       ),
     );

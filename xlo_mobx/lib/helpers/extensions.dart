@@ -25,4 +25,9 @@ extension DateTimeExtension on DateTime {
   String formattedDate() {
     return DateFormat('dd MMM HH:mm', 'pt-BR').format(this);
   }
+
+  String formattedDate2() {
+    return DateFormat('MMMM yyyy', 'pt-BR').format(this);
+  }
+
 }

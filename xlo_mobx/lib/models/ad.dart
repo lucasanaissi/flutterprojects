@@ -18,6 +18,7 @@ class Ad {
     images = object.get<List>(keyAdImages)!.map((e) => e.url).toList();
     hidePhone = object.get<bool>(keyAdHidePhone);
     price = object.get<num>(keyAdPrice);
+    updatedAt = object.updatedAt;
     created = object.createdAt;
     address = Address(
       district: object.get<String>(keyAdDistrict),
@@ -49,6 +50,7 @@ class Ad {
 
   AdStatus? status = AdStatus.PENDING;
   DateTime? created;
+  DateTime? updatedAt;
 
   User? user;
 
