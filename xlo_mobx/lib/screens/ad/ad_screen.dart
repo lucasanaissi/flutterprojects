@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
 import '../../models/ad.dart';
-import 'components/annoucer_tile.dart';
+import 'components/announcer_tile.dart';
 import 'components/bottom_bar.dart';
 
 class AdScreen extends StatelessWidget {
@@ -56,7 +56,7 @@ class AdScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ad.price!.formattedMoney(),
+                      ad.price.formattedMoney(),
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w300,

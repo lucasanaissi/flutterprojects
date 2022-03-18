@@ -85,7 +85,7 @@ abstract class _HomeStore with Store {
 
   @action
   void addNewAds(List<Ad> newAds) {
-    if (newAds.length < 10) {
+    if (newAds.length <= 10) {
       lastPage = true;
       adList.addAll(newAds);
     }
@@ -102,5 +102,4 @@ abstract class _HomeStore with Store {
 
   @computed
   bool get showProgress => loading && adList.isEmpty;
-
 }

@@ -16,14 +16,14 @@ class Ad {
     title = object.get<String>(keyAdTitle);
     description = object.get<String>(keyAdDescription);
     images = object.get<List>(keyAdImages)!.map((e) => e.url).toList();
-    hidePhone = object.get<bool>(keyAdHidePhone);
-    price = object.get<num>(keyAdPrice);
+    hidePhone = object.get<bool>(keyAdHidePhone)!;
+    price = object.get<num>(keyAdPrice)!;
     updatedAt = object.updatedAt;
     created = object.createdAt;
     address = Address(
       district: object.get<String>(keyAdDistrict),
       city: City(name: object.get<String>(keyAdCity)),
-      cep: object.get<String>(keyAdPostalCode),
+      cep: object.get<String>(keyAdPostalCode)!,
       uf: UF(initials: object.get<String>(keyAdFederativeUnit)),
     );
     views = object.get<int>(keyAdViews, defaultValue: 0);
@@ -45,8 +45,8 @@ class Ad {
 
   Address? address;
 
-  num? price;
-  bool? hidePhone;
+  num price = 0;
+  bool hidePhone = false;
 
   AdStatus? status = AdStatus.PENDING;
   DateTime? created;

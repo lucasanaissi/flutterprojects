@@ -43,7 +43,7 @@ class BottomBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              !ad.hidePhone!
+              !ad.hidePhone
                   ? SizedBox(
                       width: 120,
                       height: 40,

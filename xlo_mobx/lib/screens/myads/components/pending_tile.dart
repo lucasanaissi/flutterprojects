@@ -43,7 +43,7 @@ class PendingTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        ad.price!.formattedMoney(),
+                        ad.price.formattedMoney(),
                         style: const TextStyle(
                           fontSize: 14,
                         ),

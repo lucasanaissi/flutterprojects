@@ -27,14 +27,17 @@ class AdRepository {
 
     queryBuilder.whereEqualTo(keyAdStatus, AdStatus.ACTIVE.index);
 
-    if (search != null && search.trim().isNotEmpty) {
+    if (search != null && search
+        .trim()
+        .isNotEmpty) {
       queryBuilder.whereContains(keyAdTitle, search, caseSensitive: false);
     }
 
     if (category != null && category.id != '*') {
       queryBuilder.whereEqualTo(
         keyAdCategory,
-        (ParseObject(keyCategoryTable)..set(keyCategoryId, category.id))
+        (ParseObject(keyCategoryTable)
+          ..set(keyCategoryId, category.id))
             .toPointer(),
       );
     }
@@ -98,6 +101,10 @@ class AdRepository {
 
       final adObject = ParseObject(keyAdTable);
 
+      if (ad.id != null) {
+        adObject.objectId = ad.id;
+      }
+
       final parseAcl = ParseACL(owner: parseUser);
       parseAcl.setPublicReadAccess(allowed: true);
       parseAcl.setPublicWriteAccess(allowed: false);
@@ -105,8 +112,8 @@ class AdRepository {
 
       adObject.set<String>(keyAdTitle, ad.title!);
       adObject.set<String>(keyAdDescription, ad.description!);
-      adObject.set<bool>(keyAdHidePhone, ad.hidePhone!);
-      adObject.set<num>(keyAdPrice, ad.price!);
+      adObject.set<bool>(keyAdHidePhone, ad.hidePhone);
+      adObject.set<num>(keyAdPrice, ad.price);
       adObject.set<int>(keyAdStatus, ad.status!.index);
 
       adObject.set<String>(keyAdDistrict, ad.address!.district!);
@@ -119,7 +126,8 @@ class AdRepository {
       adObject.set<ParseUser>(keyAdOwner, parseUser);
 
       adObject.set<ParseObject>(keyAdCategory,
-          ParseObject(keyCategoryTable)..set(keyCategoryId, ad.category!.id));
+          ParseObject(keyCategoryTable)
+            ..set(keyCategoryId, ad.category!.id));
 
       final response = await adObject.save();
 
@@ -137,7 +145,12 @@ class AdRepository {
 
     try {
       for (final image in images) {
-        if (image is File) {
+        if (image is String) {
+          final parseFile = ParseFile(File(path.basename(image)));
+          parseFile.name = path.basename(image);
+          parseFile.url = image;
+          parseImages.add(parseFile);
+        } else {
           final parseFile = ParseFile(image, name: path.basename(image.path));
           final response = await parseFile.save();
           if (!response.success) {
@@ -145,23 +158,18 @@ class AdRepository {
                 ParseErrors.getDescription(response.error!.code).toString());
           }
           parseImages.add(parseFile);
-        } else {
-          final parseFile = ParseFile(null);
-          parseFile.name = path.basename(image);
-          parseFile.url = image;
-          parseImages.add(parseFile);
         }
       }
-      return parseImages;
     } catch (e) {
       return Future.error('Falha ao salvar imagens');
     }
+    return parseImages;
   }
 
   Future<List<Ad>> getMyAds(User user) async {
     final currentUser = await ParseUser.currentUser() as ParseUser;
     final queryBuilder = QueryBuilder<ParseObject>(ParseObject(keyAdTable));
-    
+
     queryBuilder.setLimit(100);
     queryBuilder.orderByDescending(keyAdCreatedAt);
     queryBuilder.whereEqualTo(keyAdOwner, currentUser.toPointer());
@@ -173,6 +181,32 @@ class AdRepository {
     } else if (response.success && response.results == null) {
       return [];
     } else {
+      return Future.error(
+          ParseErrors.getDescription(response.error!.code).toString());
+    }
+  }
+
+  Future<void> sold(Ad ad) async {
+    final parseObject = ParseObject(keyAdTable)
+      ..set(keyAdId, ad.id);
+
+    parseObject.set(keyAdStatus, AdStatus.SOLD.index);
+
+    final response = await parseObject.save();
+    if (!response.success) {
+      return Future.error(
+          ParseErrors.getDescription(response.error!.code).toString());
+    }
+  }
+
+  Future<void> delete(Ad ad) async {
+    final parseObject = ParseObject(keyAdTable)
+      ..set(keyAdId, ad.id);
+
+    parseObject.set(keyAdStatus, AdStatus.DELETED.index);
+
+    final response = await parseObject.save();
+    if (!response.success) {
       return Future.error(
           ParseErrors.getDescription(response.error!.code).toString());
     }

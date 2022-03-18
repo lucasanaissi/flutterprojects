@@ -47,16 +47,14 @@ class ImagesField extends StatelessWidget {
                           if (Platform.isAndroid) {
                             showModalBottomSheet(
                               context: context,
-                              builder: (_) =>
-                                  ImageSourceModal(
-                                      onImageSelected: onImageSelected),
+                              builder: (_) => ImageSourceModal(
+                                  onImageSelected: onImageSelected),
                             );
                           } else {
                             showCupertinoModalPopup(
                               context: context,
-                              builder: (_) =>
-                                  ImageSourceModal(
-                                      onImageSelected: onImageSelected),
+                              builder: (_) => ImageSourceModal(
+                                  onImageSelected: onImageSelected),
                             );
                           }
                         },
@@ -87,8 +85,7 @@ class ImagesField extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${createadStore.images
-                                      .length} de 20 adicionadas',
+                                  '${createadStore.images.length} de 20 adicionadas',
                                   style: const TextStyle(
                                     fontSize: 15,
                                   ),
@@ -105,8 +102,7 @@ class ImagesField extends StatelessWidget {
                           onTap: () {
                             showDialog(
                                 context: context,
-                                builder: (_) =>
-                                    ImageDialog(
+                                builder: (_) => ImageDialog(
                                       image: createadStore.images[index],
                                       onDelete: () =>
                                           createadStore.images.removeAt(index),
@@ -117,10 +113,15 @@ class ImagesField extends StatelessWidget {
                             child: SizedBox(
                               height: 250,
                               width: 250,
-                              child: Image.file(
-                                createadStore.images[index],
-                                fit: BoxFit.fill,
-                              ),
+                              child: createadStore.images[index] is File
+                                  ? Image.file(
+                                      createadStore.images[index],
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Image.network(
+                                      createadStore.images[index],
+                                      fit: BoxFit.fill,
+                                    ),
                             ),
                           ),
                         ),
@@ -132,35 +133,30 @@ class ImagesField extends StatelessWidget {
             },
           ),
         ),
-
-          Observer(
-              builder: (_) {
-                if(createadStore.imagesError != null) {
-                  return Container(
-                  alignment: Alignment.centerLeft,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          top: BorderSide(
-                            color: Colors.red,
-                          )
-                      )
+        Observer(builder: (_) {
+          if (createadStore.imagesError != null) {
+            return Container(
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(
+                color: Colors.red,
+              ))),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, top: 10),
+                child: Text(
+                  createadStore.imagesError!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30, top: 10),
-                    child: Text(
-                      createadStore.imagesError!,
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                );
-                } else {
-                  return Container();
-                }
-              }
-          ),
+                ),
+              ),
+            );
+          } else {
+            return Container();
+          }
+        }),
       ],
     );
   }

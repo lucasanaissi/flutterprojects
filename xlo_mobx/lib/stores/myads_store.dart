@@ -25,11 +25,39 @@ abstract class _MyAdsStore with Store {
   List<Ad> get soldAds =>
       allAds.where((ad) => ad.status == AdStatus.SOLD).toList();
 
+
+  @observable
+  bool loading = false;
+
+  @action
+  void setLoading(bool value) => loading = value;
+
   Future<void> _getMyAds() async {
     final user = GetIt.I<UserManagerStore>().user;
 
     try {
+      loading = true;
       allAds = await AdRepository().getMyAds(user!);
-    } catch (e) {}
+      loading = false;
+    } catch (e) {
+      Future.error('Falha ao buscar seus anúncios');
+    }
+  }
+
+  @action
+  void refresh() => _getMyAds();
+
+  @action
+  Future<void> soldAd (Ad ad) async {
+    loading = true;
+    await AdRepository().sold(ad);
+    refresh();
+  }
+
+  @action
+  Future<void> deleteAd (Ad ad) async {
+    loading = true;
+    await AdRepository().delete(ad);
+    refresh();
   }
 }

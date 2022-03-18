@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
+import 'package:xlo_mobx/stores/myads_store.dart';
 
 import '../../../models/ad.dart';
 
 class SoldTile extends StatelessWidget {
-  SoldTile({Key? key, required this.ad}) : super(key: key);
+  SoldTile({Key? key, required this.ad, required this.store}) : super(key: key);
 
   final Ad ad;
+  final MyAdsStore store;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,9 @@ class SoldTile extends StatelessWidget {
                     size: 15,
                     color: Colors.purple,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    store.deleteAd(ad);
+                  },
                 ),
               ),
             ],

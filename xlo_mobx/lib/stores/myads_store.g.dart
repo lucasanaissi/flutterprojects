@@ -32,10 +32,64 @@ mixin _$MyAdsStore on _MyAdsStore, Store {
     });
   }
 
+  final _$loadingAtom = Atom(name: '_MyAdsStore.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  final _$soldAdAsyncAction = AsyncAction('_MyAdsStore.soldAd');
+
+  @override
+  Future<void> soldAd(Ad ad) {
+    return _$soldAdAsyncAction.run(() => super.soldAd(ad));
+  }
+
+  final _$deleteAdAsyncAction = AsyncAction('_MyAdsStore.deleteAd');
+
+  @override
+  Future<void> deleteAd(Ad ad) {
+    return _$deleteAdAsyncAction.run(() => super.deleteAd(ad));
+  }
+
+  final _$_MyAdsStoreActionController = ActionController(name: '_MyAdsStore');
+
+  @override
+  void setLoading(bool value) {
+    final _$actionInfo = _$_MyAdsStoreActionController.startAction(
+        name: '_MyAdsStore.setLoading');
+    try {
+      return super.setLoading(value);
+    } finally {
+      _$_MyAdsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void refresh() {
+    final _$actionInfo =
+        _$_MyAdsStoreActionController.startAction(name: '_MyAdsStore.refresh');
+    try {
+      return super.refresh();
+    } finally {
+      _$_MyAdsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 allAds: ${allAds},
+loading: ${loading},
 activeAds: ${activeAds}
     ''';
   }

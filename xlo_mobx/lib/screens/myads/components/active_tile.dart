@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
+import 'package:xlo_mobx/screens/adverts/components/create_ad_button.dart';
+import 'package:xlo_mobx/screens/createAd/createad_screen.dart';
 
 import '../../../models/ad.dart';
+import '../../../stores/myads_store.dart';
 import '../../ad/ad_screen.dart';
 
 class ActiveTile extends StatelessWidget {
-  ActiveTile({Key? key, required this.ad}) : super(key: key);
+  ActiveTile({Key? key, required this.ad, required this.store})
+      : super(key: key);
 
   final Ad ad;
+  final MyAdsStore store;
 
   final List<MenuChoice> choices = [
     MenuChoice(index: 0, title: 'Editar', iconData: Icons.edit),
@@ -19,9 +24,8 @@ class ActiveTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => AdScreen(ad: ad))
-        );
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => AdScreen(ad: ad)));
       },
       child: SizedBox(
         height: 80,
@@ -49,7 +53,7 @@ class ActiveTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        ad.price!.formattedMoney(),
+                        ad.price.formattedMoney(),
                         style: const TextStyle(
                           fontSize: 14,
                         ),
@@ -68,17 +72,23 @@ class ActiveTile extends StatelessWidget {
               ),
               PopupMenuButton<MenuChoice>(
                 onSelected: (choice) {
-                  switch(choice.index) {
+                  switch (choice.index) {
                     case 0:
+                      editAd(context);
+                      break;
                     case 1:
+                      soldAd(context);
+                      break;
                     case 2:
+                      deleteAd(context);
                       break;
                   }
                 },
                 itemBuilder: (_) {
-                  return choices.map((choice) =>
+                  return choices
+                      .map((choice) =>
                       PopupMenuItem<MenuChoice>(
-                        value: choice,
+                          value: choice,
                           child: Row(
                             children: [
                               Icon(
@@ -95,8 +105,8 @@ class ActiveTile extends StatelessWidget {
                                 ),
                               )
                             ],
-                          ))
-                  ).toList();
+                          )))
+                      .toList();
                 },
               ),
             ],
@@ -104,6 +114,65 @@ class ActiveTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> editAd(BuildContext context) async {
+    final success = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => CreateAdScreen(ad: ad)));
+    if (success != null && success) {
+      store.refresh();
+    }
+  }
+
+  Future<void> soldAd(BuildContext context) async {
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text('Vendido'),
+          content: Text('Confirmar a venda de: ${ad.title}?'),
+          actions: [
+            TextButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+                store.soldAd(ad);
+              },
+              child: const Text('Sim',
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Future<void> deleteAd(BuildContext context) async {
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text('Excluir'),
+          content: Text('Excluir ${ad.title}?'),
+          actions: [
+            TextButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+                store.deleteAd(ad);
+                store.refresh();
+              },
+              child: const Text('Sim',
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

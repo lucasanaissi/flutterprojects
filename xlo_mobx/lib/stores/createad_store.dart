@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:xlo_mobx/helpers/extensions.dart';
 import 'package:xlo_mobx/repositories/ad_repository.dart';
 import 'package:xlo_mobx/stores/cep_store.dart';
 import 'package:xlo_mobx/stores/user_manager_store.dart';
@@ -14,6 +15,24 @@ part 'createad_store.g.dart';
 class CreateadStore = _CreateadStore with _$CreateadStore;
 
 abstract class _CreateadStore with Store {
+  _CreateadStore({this.ad}) {
+    if (ad != null) {
+      title = ad!.title;
+      description = ad!.description;
+      images = ad!.images!.asObservable();
+      category = ad!.category;
+      priceText = ad!.price.formattedMoney();
+      hidePhone = ad!.hidePhone;
+    }
+    if (ad?.address != null) {
+      cepStore = CepStore(ad!.address!.cep);
+    } else {
+      cepStore = CepStore(null);
+    }
+  }
+
+  final Ad? ad;
+
   ObservableList images = ObservableList();
 
   @computed
@@ -73,6 +92,7 @@ abstract class _CreateadStore with Store {
 
   @computed
   bool get categoryValid => category != null;
+
   String? get categoryError {
     if (!showErrors || categoryValid) {
       return null;
@@ -86,32 +106,35 @@ abstract class _CreateadStore with Store {
 
   @action
   void setPrice(String value) => priceText = value;
-  
+
   @computed
   num? get price {
-    if(priceText!.contains('.')) {
-      return num.tryParse(
-          priceText!.replaceAll(RegExp('[^0-9]'), ''))! / 100;
+    if (priceText!.contains('.')) {
+      return num.tryParse(priceText!.replaceAll(RegExp('[^0-9]'), ''))! / 100;
     } else {
       return num.tryParse(priceText!);
     }
   }
+
   bool get priceValid => price != null && price! <= 9999999;
+
   String? get priceError {
     if (!showErrors || priceValid) {
       return null;
-    } else if(priceText!.isEmpty) {
+    } else if (priceText!.isEmpty) {
       return 'Campo obrigatório';
     } else {
       return 'Preço inválido';
     }
   }
 
-  CepStore cepStore = CepStore();
+  late CepStore cepStore;
 
   @computed
   Address? get address => cepStore.address;
+
   bool get addressValid => address != null;
+
   String? get addressError {
     if (!showErrors || addressValid) {
       return null;
@@ -126,14 +149,14 @@ abstract class _CreateadStore with Store {
   @action
   bool? setHidePhone(bool? value) => hidePhone = value;
 
-
   @computed
-  bool get formValid => imagesValid
-      && titleValid
-      && descValid
-      && categoryValid
-      && addressValid
-      && priceValid;
+  bool get formValid =>
+      imagesValid &&
+          titleValid &&
+          descValid &&
+          categoryValid &&
+          addressValid &&
+          priceValid;
 
   @computed
   dynamic get sendPressed => formValid ? _send : null;
@@ -155,24 +178,38 @@ abstract class _CreateadStore with Store {
 
   @action
   Future<void> _send() async {
-    final ad = Ad();
-    ad.title = title;
-    ad.description = description;
-    ad.category = category;
-    ad.price = price;
-    ad.hidePhone = hidePhone;
-    ad.images = images;
-    ad.address = address;
-    ad.user = GetIt.I<UserManagerStore>().user!;
+    Ad newAd = Ad();
+    if (ad != null) {
+      ad!.title = title;
+      ad!.description = description;
+      ad!.category = category;
+      ad!.price = price!;
+      ad!.hidePhone = hidePhone!;
+      ad!.images = images;
+      ad!.address = address;
+      ad!.user = GetIt
+          .I<UserManagerStore>()
+          .user!;
+    } else {
+      newAd.title = title;
+      newAd.description = description;
+      newAd.category = category;
+      newAd.price = price!;
+      newAd.hidePhone = hidePhone!;
+      newAd.images = images;
+      newAd.address = address;
+      newAd.user = GetIt
+          .I<UserManagerStore>()
+          .user!;
+    }
 
     loading = true;
     try {
-      await AdRepository().save(ad);
+      await AdRepository().save(ad != null? ad! : newAd);
       savedAd = true;
     } catch (e) {
       error = e.toString();
     }
     loading = false;
   }
-
 }

@@ -42,7 +42,7 @@ class AdTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ad.price!.formattedMoney(),
+                      ad.price.formattedMoney(),
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

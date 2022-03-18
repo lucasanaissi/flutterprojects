@@ -6,50 +6,63 @@ import 'package:mobx/mobx.dart';
 import 'package:xlo_mobx/components/custom_drawer/custom_drawer.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:xlo_mobx/components/error_box.dart';
+import 'package:xlo_mobx/helpers/extensions.dart';
 import 'package:xlo_mobx/screens/categories/categories_screen.dart';
 import 'package:xlo_mobx/screens/createAd/components/cep_field.dart';
+import 'package:xlo_mobx/screens/myads/myads_screen.dart';
 import 'package:xlo_mobx/stores/category_store.dart';
 import 'package:xlo_mobx/stores/createad_store.dart';
 
+import '../../models/ad.dart';
 import '../../stores/page_store.dart';
 import 'components/category_field.dart';
 import 'components/hide_phone_field.dart';
 import 'components/images_field.dart';
 
 class CreateAdScreen extends StatefulWidget {
-  CreateAdScreen({Key? key}) : super(key: key);
+  const CreateAdScreen({Key? key, this.ad}) : super(key: key);
+
+  final Ad? ad;
 
   @override
-  State<CreateAdScreen> createState() => _CreateAdScreenState();
+  State<CreateAdScreen> createState() => _CreateAdScreenState(ad);
 }
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
-  final CreateadStore createadStore = CreateadStore();
+  _CreateAdScreenState(Ad? ad)
+      : editing = ad != null,
+        createadStore = ad != null ? CreateadStore(ad: ad) : CreateadStore();
+
+  final CreateadStore createadStore;
   final CategoryStore categoryStore = CategoryStore();
 
+  bool editing;
 
   @override
   void initState() {
     super.initState();
 
-    when((_) => createadStore.savedAd,() {
-    GetIt.I<PageStore>().setPage(0);
+    when((_) => createadStore.savedAd, () {
+      if(editing) {
+        Navigator.of(context).pop(true);
+      } else {
+        GetIt.I<PageStore>().setPage(0);
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const MyAdsScreen(initialPage: 1))
+        );
+      }
     });
   }
-
-  final TextEditingController? _priceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: const Text('Inserir anúncio'),
+        title: Text(editing ? 'Editar anúncio' : 'Inserir anúncio'),
         actions: [
           TextButton(
-            onPressed: () {
-
-            },
+            onPressed: () {},
             child: const Text(
               'LIMPAR',
               style: TextStyle(
@@ -59,7 +72,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
           ),
         ],
       ),
-      drawer: const CustomDrawer(),
+      drawer: editing ? null : const CustomDrawer(),
       body: Observer(
         builder: (_) {
           if (createadStore.loading) {
@@ -109,7 +122,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Observer(
                       builder: (_) {
-                        return TextField(
+                        return TextFormField(
+                          initialValue: createadStore.title,
                           onChanged: createadStore.setTitle,
                           cursorColor: Colors.deepPurple,
                           decoration: InputDecoration(
@@ -146,7 +160,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Observer(
                       builder: (_) {
-                        return TextField(
+                        return TextFormField(
+                          initialValue: createadStore.description,
                           onChanged: createadStore.setDescription,
                           minLines: 4,
                           maxLines: 6,
@@ -190,8 +205,10 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     padding: const EdgeInsets.only(right: 250, left: 20),
                     child: Observer(
                       builder: (_) {
-                        return TextField(
-                          controller: _priceController,
+                        return TextFormField(
+                          initialValue: createadStore.price != null
+                              ? createadStore.price.toString()
+                              : '',
                           cursorColor: Colors.deepPurple,
                           onChanged: createadStore.setPrice,
                           decoration: InputDecoration(
@@ -218,44 +235,45 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 Observer(
                   builder: (_) {
                     return ErrorBox(
-                        message: createadStore.error,
+                      message: createadStore.error,
                     );
                   },
                 ),
                 const SizedBox(height: 4),
                 Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 0,
-                      bottom: 20,
-                    ),
-                    child: Observer(
-                      builder: (_) {
-                        return SizedBox(
-                          child: GestureDetector(
-                            onTap: createadStore.invalidSendPressed,
-                            child: ElevatedButton(
-                              onPressed: createadStore.sendPressed,
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(40),
-                                primary: Colors.orange,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                              ),
-                              child: const Text(
-                                'Criar anúncio',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500),
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 0,
+                    bottom: 20,
+                  ),
+                  child: Observer(
+                    builder: (_) {
+                      return SizedBox(
+                        child: GestureDetector(
+                          onTap: createadStore.invalidSendPressed,
+                          child: ElevatedButton(
+                            onPressed: createadStore.sendPressed,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(40),
+                              primary: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40),
                               ),
                             ),
+                            child: Text(
+                              editing ? 'Editar anúncio' : 'Criar anúncio',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        );
-                      },
-                    )),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             );
           }
