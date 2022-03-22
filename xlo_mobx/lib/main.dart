@@ -8,6 +8,8 @@ import 'package:xlo_mobx/repositories/ibge_repository.dart';
 import 'package:xlo_mobx/screens/categories/categories_screen.dart';
 import 'package:xlo_mobx/screens/home/home_screen.dart';
 import 'package:get_it/get_it.dart';
+import 'package:xlo_mobx/stores/connectivity_store.dart';
+import 'package:xlo_mobx/stores/favorite_store.dart';
 import 'package:xlo_mobx/stores/home_store.dart';
 import 'package:xlo_mobx/stores/page_store.dart';
 import 'package:xlo_mobx/stores/user_manager_store.dart';
@@ -22,10 +24,12 @@ void main() async {
 }
 
 void setupLocators() {
+  GetIt.I.registerSingleton(ConnectivityStore());
   GetIt.I.registerSingleton(PageStore());
   GetIt.I.registerSingleton(HomeStore());
   GetIt.I.registerSingleton(UserManagerStore());
   GetIt.I.registerSingleton(CategoryStore());
+  GetIt.I.registerSingleton(FavoriteStore());
 }
 
 Future<void> initializeParse() async {

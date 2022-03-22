@@ -76,7 +76,7 @@ class CategoriesScreen extends StatelessWidget {
                                 right: 40,
                             ),
                             child: Text(
-                              category.description,
+                              category.description!,
                               style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.deepPurple,

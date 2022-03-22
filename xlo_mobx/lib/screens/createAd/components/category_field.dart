@@ -49,7 +49,7 @@ class CategoryField extends StatelessWidget {
                   ),
                 );
                 if (response != null) {
-                  _categoryController?.text = response.description;
+                  _categoryController?.text = response.description!;
                   createadStore.setCategory(response);
                 }
               },

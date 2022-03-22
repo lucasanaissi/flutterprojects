@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:xlo_mobx/helpers/extensions.dart';
+import 'package:xlo_mobx/stores/favorite_store.dart';
+import 'package:xlo_mobx/stores/user_manager_store.dart';
 import '../../models/ad.dart';
 import 'components/announcer_tile.dart';
 import 'components/bottom_bar.dart';
 
 class AdScreen extends StatelessWidget {
-  const AdScreen({Key? key, required this.ad}) : super(key: key);
+  AdScreen({Key? key, required this.ad}) : super(key: key);
 
   final Ad ad;
+  final UserManagerStore userManagerStore = GetIt.I<UserManagerStore>();
+  final FavoriteStore favoriteStore = GetIt.I<FavoriteStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +25,17 @@ class AdScreen extends StatelessWidget {
           'Anúncio',
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.favorite_outline,
-            ),
-            onPressed: () {},
-          ),
+          if (ad.status == AdStatus.ACTIVE && userManagerStore.isLoggedIn)
+            Observer(builder: (_) {
+              return IconButton(
+                icon: Icon(
+                  favoriteStore.favoriteList.any((a) => a.id == ad.id)
+                      ? Icons.favorite
+                      : Icons.favorite_outline,
+                ),
+                onPressed: () => favoriteStore.toggleFavorite(ad),
+              );
+            }),
           IconButton(
             icon: const Icon(
               Icons.share,
@@ -110,8 +121,8 @@ class AdScreen extends StatelessWidget {
                 thickness: 1,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 20, top: 8, bottom: 12, right: 150),
+                padding: const EdgeInsets.only(
+                    left: 20, top: 8, bottom: 12, right: 150),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

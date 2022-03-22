@@ -35,9 +35,9 @@ class UserRepository {
 
   Future<User?> currentUser() async {
     final parseUser = await ParseUser.currentUser();
-    if(parseUser != null) {
-      final response = await ParseUser
-          .getCurrentUserFromServer(parseUser.sessionToken);
+    if (parseUser != null) {
+      final response =
+          await ParseUser.getCurrentUserFromServer(parseUser.sessionToken);
       if (response!.success) {
         return mapParseToUser(response.result);
       } else {
@@ -45,6 +45,44 @@ class UserRepository {
       }
     }
     return null;
+  }
+
+  Future<void> save (User user) async {
+    final ParseUser parseUser = await ParseUser.currentUser();
+
+    if (parseUser != null) {
+      parseUser.set<String>(keyUserName, user.name!);
+      parseUser.set<String>(keyUserPhone, user.phone!);
+      parseUser.set<int>(keyUserType, user.type!.index);
+    }
+
+    if (user.password != null) {
+      parseUser.password = user.password;
+    }
+
+    final response = await parseUser.save();
+
+    if (!response.success) {
+      return Future.error(
+          ParseErrors.getDescription(response.error!.code).toString());
+    }
+
+    if (user.password != null) {
+      await parseUser.logout();
+
+      final loginResponse =
+          await ParseUser(user.email, user.password, '').login();
+
+      if (!loginResponse.success) {
+        return Future.error(
+            ParseErrors.getDescription(response.error!.code).toString());
+      }
+    }
+  }
+
+  Future<void> logout() async {
+    final ParseUser currentUser = await ParseUser.currentUser();
+    await currentUser.logout();
   }
 
   User mapParseToUser(ParseUser parseUser) {

@@ -34,7 +34,7 @@ abstract class _LoginStore with Store {
       password == null || passwordValid ? null : 'Senha inválida';
 
   @computed
-  dynamic get loginPressed => emailValid && passwordValid ? _signIn : null;
+  dynamic get loginPressed => emailValid ? _signIn : null;
 
   @observable
   bool loading = false;
@@ -45,6 +45,7 @@ abstract class _LoginStore with Store {
   @action
   Future<void> _signIn() async {
     loading = true;
+    error = null;
 
     try {
       final user = await UserRepository().loginWithEmail(

@@ -12,8 +12,8 @@ class Category {
         description = parseObject.get(keyCategoryDescription);
 
 
-  final String id;
-  final String description;
+  final String? id;
+  final String? description;
 
   @override
   String toString() {

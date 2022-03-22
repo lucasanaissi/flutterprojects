@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 import 'package:text_divider/text_divider.dart';
 import 'package:xlo_mobx/components/error_box.dart';
 import 'package:xlo_mobx/screens/signup/signup_screen.dart';
+import 'package:xlo_mobx/stores/user_manager_store.dart';
 
 import '../../stores/login_store.dart';
 
@@ -13,10 +16,22 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-final LoginStore loginStore = LoginStore();
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  final LoginStore loginStore = LoginStore();
+  final UserManagerStore userManagerStore = GetIt.I<UserManagerStore>();
   bool visibility = true;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    when((_) => userManagerStore.user != null, () {
+      Navigator.of(context).pop(true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +218,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
                               isDense: true,
-                              errorText: loginStore.passwordError,
                               suffixIcon: InkWell(
                                 onTap: () {
                                   setState(() {
